@@ -1,0 +1,1 @@
+import Rect from './rect.js'class Paddle extends Rect {  constructor ({x, y, width, height, color} = {}) {    super(x, y, width, height, color)  }}export default Paddle

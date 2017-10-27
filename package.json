@@ -1,0 +1,25 @@
+{
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "browser-sync": "^2.18.13",
+    "jsdom-quokka-plugin": "^1.0.7"
+  },
+  "scripts": {
+    "start": "browser-sync start --server --directory --files='./*html, ./*.js'"
+  },
+  "name": "canvas",
+  "version": "1.0.0",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "quokka": {
+    "babel": true,
+    "presets": [
+      "env"
+    ],
+    "plugins": ["jsdom-quokka-plugin"]
+  }
+}

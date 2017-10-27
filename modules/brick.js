@@ -1,0 +1,1 @@
+import Rect from './rect.js';class Brick extends Rect {  constructor ({x, y, width, height, color} = {}){    super(x, y, width, height, color);    this.visible = true;  }}export default Brick;
