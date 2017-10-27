@@ -1,0 +1,1 @@
+function floor () {  Math.floor(3.243435);}floor()
