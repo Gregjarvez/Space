@@ -6,7 +6,7 @@
     "jsdom-quokka-plugin": "^1.0.7"
   },
   "scripts": {
-    "start": "browser-sync start --server --directory --files='./*html, ./*.js'"
+    "start": "browser-sync start --server --directory --files='./*html, ./**/*.js'"
   },
   "name": "canvas",
   "version": "1.0.0",
