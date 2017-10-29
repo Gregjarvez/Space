@@ -1,17 +1,19 @@
 import Vec from './vector';
 import Circle from './circles';
-import { canvas, ctx } from './canvas';
+import gamesCanvas, { canvas } from './canvas';
 
 class Ball extends Circle {
   constructor(spec) {
     super(spec);
-    this.drag = 0.35;
-    this.vel = new Vec(3, 5);
+    this.drag = 0.5;
+    this.vel = new Vec(5, 7);
+    this.accepted = null; // currently life
   }
 
   move() {
-    this.pos.x += this.vel.x / 2;
-    this.pos.y += this.vel.y / 2;
+    this.pos.x += (this.vel.x * this.drag);
+    this.pos.y += (this.vel.y * this.drag);
+
     if (this.left <= 0 || this.right > canvas.width) {
       this.vel.x = -this.vel.x;
     }
@@ -22,18 +24,27 @@ class Ball extends Circle {
 
     if (this.top > canvas.height) {
       this.reset();
+      if (this.accepted.lifes.length) {
+        this.accepted.decrease();
+      }
     }
   }
 
+  // accepts life
+  plugin(entity) {
+    this.accepted = entity;
+    return this;
+  }
+
   reset() {
-    this.pos.x = canvas.halfWidth;
-    this.pos.y = canvas.halfHeight;
-    this.vel.x = 3;
-    this.vel.y = 5;
+    this.pos.x = gamesCanvas.halfWidth;
+    this.pos.y = gamesCanvas.halfHeight;
+    this.vel.x = 5;
+    this.vel.y = 7;
   }
 
   draw() {
-    this.drawCircle(ctx, this);
+    this.drawCircle(this);
   }
 }
 

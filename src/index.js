@@ -1,92 +1,109 @@
+/* eslint-disable consistent-return */
 import Paddle from './modules/paddle';
 import Ball from './modules/ball';
 import specs from './modules/specs';
 import Brick from './modules/brick';
-import { canvas, ctx, repaint } from './modules/canvas';
-import Event from './modules/events';
+import { repaint, canvas } from './modules/canvas';
 import Grid from './modules/grid';
+import Event from './modules/events';
+import Life from './modules/life';
+import Text from './modules/text';
+import Ticker from './modules/ticker';
 
 class Pong {
   constructor() {
+    this.life = new Life();
     this.event = new Event();
-    this.paddle = new Paddle(specs.paddleSpecs);
-    this.ball = new Ball(specs.ballSpecs);
     this.grid = new Grid(10, 8);
-    this.fps = 60;
-    this.lifes = 3;
+    this.ball = new Ball(specs.ballSpecs);
+    this.paddle = new Paddle(specs.paddleSpecs);
+    this.clickToStart = new Text(specs.welcome);
+    this.clickToRestart = new Text(Object.assign(specs.welcome, { text: 'Click To Restart' }));
+    this.ticker = new Ticker();
+    this.started = false;
 
-    this.init();
+    this.setup();
   }
 
-  init() {
+  start() {
+    if (!this.started) {
+      this.event
+        .accept(canvas)
+        .on('click', () => {
+          if (!this.started) {
+            this.clickToStart.remove();
+
+            this.ticker.tick();
+            this.started = true;
+          }
+        });
+    }
+  }
+
+  restart() {
+    this.ticker.stop();
+
+    this.event.clear();
+    this.started = false;
+
+    this.start();
+  }
+
+  setup() {
+    repaint();
+
     this.grid
       .fill(Brick, specs.brick, true)
-      .accept(this.ball)
+      .plugin(this.ball)
       .construct();
 
-    this.paddle.accept(this.ball);
+    this.clickToStart.show();
+    this.ball.plugin(this.life);
+    this.paddle.plugin(this.ball);
 
-    this.update();
-    this.onMouseMove();
+    this.ticker.register(this.update);
+    this.paddle.onMouseMove();
   }
 
-  update() {
-    setInterval(() => {
-      this.draw();
-
-      this.ball.move();
-      this.grid.checkIntersection();
-
-      this.paddle.checkCollision();
-
-      this.reset();
-    }, 1000 / this.fps);
-  }
-
-  draw() {
+  update = () => {
     repaint();
+
     this.paddle.draw();
     this.ball.draw();
-    this.grid.drawGrid();
+    this.grid.draw();
 
-    this.drawLife();
-    this.__debugger__();
+    this.ball.move();
+    this.grid.checkIntersection();
+    this.paddle.checkCollision();
+
+    this.clickToStart.show();
+    this.life.show();
+
+    this.reset();
   }
 
-  drawLife() {
-    ctx.fillStyle = 'blue';
-    ctx.font = '20px sans-serif';
-    ctx.fillText(this.lifes.toString(), 10, 25);
-  }
-
-  onMouseMove() {
-    this.event
-      .accept(canvas)
-      .on('mousemove', this.paddle.move);
-  }
-
-  __debugger__() {
-    ctx.fillStyle = 'blue';
-    const { width, height } = specs.brick;
-    const col = Math.floor(this.paddle.eventX / width);
-    const row = Math.floor(this.paddle.eventY / height);
-    const index = col + (
-      this.grid.dimension.y * row
-    );
-    ctx.font = '17px sans-serif';
-    ctx.fillText(`${col}, ${row}, ${index}`, this.paddle.eventX, this.paddle.eventY);
+  isGameover() {
+    const numberOfBricksLeft = this.grid.gridItemDone -
+                               (this.grid.gridItems.length - this.grid.skip);
+    return this.life.lifes.length === 0 || numberOfBricksLeft === 0;
   }
 
   reset() {
-    const numberLeft = this.grid.gridItems.length - this.grid.skip;
-    if (this.grid.gridItemDone === numberLeft) {
+    if (this.isGameover()) {
+      this.clickToRestart.show();
+      this.restart();
+
       this.ball.reset();
-      this.grid.resetGrid();
+      this.grid.reset();
       this.paddle.reset();
+      this.life.resetLife();
+
       this.grid.gridItemDone = 0;
     }
   }
 }
 const pong = new Pong();
+pong.start();
+
 window.pong = pong;
 

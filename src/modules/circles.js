@@ -1,4 +1,5 @@
 import Vec from './vector';
+import { ctx } from './canvas';
 
 class Circle {
   constructor({
@@ -16,7 +17,7 @@ class Circle {
   }
 
   get right() {
-    return this.pos.x;
+    return this.pos.x + this.radius;
   }
 
   get top() {
@@ -24,11 +25,11 @@ class Circle {
   }
 
   get bottom() {
-    return this.pos.y + (this.radius / 2);
+    return this.pos.y + this.radius;
   }
 
   // eslint-disable-next-line class-methods-use-this
-  drawCircle(ctx, circle) {
+  drawCircle(circle) {
     ctx.fillStyle = circle.color;
     ctx.beginPath();
     ctx.arc(circle.pos.x, circle.pos.y, circle.radius, circle.startAngle, circle.endAngle, true);

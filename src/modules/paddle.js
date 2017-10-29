@@ -1,4 +1,5 @@
 import Rect from './rect';
+import Event from './events';
 import gameCanvas, { canvas, ctx } from './canvas';
 
 class Paddle extends Rect {
@@ -7,12 +8,11 @@ class Paddle extends Rect {
     this.pos.x = gameCanvas.halfWidth;
     this.pos.y = canvas.height - spec.offset;
 
-    this.eventX = null;
-    this.eventY = null;
     this.accepted = null;
+    this.event = new Event();
   }
 
-  accept(entity) {
+  plugin(entity) {
     if (!this.accepted) {
       this.accepted = entity;
       return this;
@@ -26,8 +26,12 @@ class Paddle extends Rect {
 
   move = (event) => {
     this.pos.x = event.offsetX - (this.size.x / 2);
-    this.eventX = event.offsetX;
-    this.eventY = event.offsetY;
+  }
+
+  onMouseMove() {
+    this.event
+      .accept(canvas)
+      .on('mousemove', this.move);
   }
 
   checkCollision() {
@@ -41,7 +45,8 @@ class Paddle extends Rect {
       const collisionPointFromCenter = this.accepted.pos.x - paddleCenter;
 
       this.accepted.vel.x = collisionPointFromCenter * this.accepted.drag;
-      this.accepted.vel.x += 0.5;
+      this.accepted.vel.x -= 0.5;
+      this.accepted.vel.y -= 0.5;
     }
   }
   reset() {

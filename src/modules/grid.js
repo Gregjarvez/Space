@@ -14,7 +14,7 @@ class Grid {
     this.shiftFromTop = false;
   }
 
-  accept(entity) {
+  plugin(entity) {
     if (!this.accepted) {
       this.accepted = entity;
       return this;
@@ -30,7 +30,7 @@ class Grid {
     return this;
   }
 
-  drawGrid() {
+  draw() {
     this.gridItems.forEach(item => item.visible && item.draw());
   }
 
@@ -90,11 +90,12 @@ class Grid {
       }
 
       this.accepted.vel.y *= -1;
+      this.accepted.vel.y += 0.05;
       this.gridItemDone++;
     }
   }
 
-  resetGrid() {
+  reset() {
     this.gridItems.forEach((brick, index) => {
       if (index >= this.skip) {
         brick.visible = true;
