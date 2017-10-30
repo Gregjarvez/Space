@@ -13,6 +13,8 @@ class Ticker {
       this.func();
       console.log('ticking');
     }, this.fps);
+
+    this.loop = requestAnimationFrame(this.func)
   }
 
   stop = () => {

@@ -1,40 +1,1 @@
-{
-  "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-eslint": "^8.0.1",
-    "babel-loader": "^7.1.2",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-preset-env": "^1.6.1",
-    "babel-preset-stage-0": "^6.24.1",
-    "browser-sync": "^2.18.13",
-    "eslint": "^4.10.0",
-    "eslint-config-airbnb-base": "^12.1.0",
-    "eslint-loader": "^1.9.0",
-    "eslint-plugin-import": "^2.8.0",
-    "html-loader": "^0.5.1",
-    "html-webpack-plugin": "^2.30.1",
-    "jsdom-quokka-plugin": "^1.0.7",
-    "webpack": "^3.8.1",
-    "webpack-dev-server": "^2.9.3"
-  },
-  "scripts": {
-    "start": "webpack && webpack-dev-server --open",
-    "lint": "eslint ./**/.*.js --quiet"
-  },
-  "name": "canvas",
-  "version": "1.0.0",
-  "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "quokka": {
-    "babel": true,
-    "presets": [
-      "env"
-    ],
-    "plugins": [
-      "jsdom-quokka-plugin"
-    ]
-  }
-}
+{  "devDependencies": {    "babel-core": "^6.26.0",    "babel-eslint": "^8.0.1",    "babel-loader": "^7.1.2",    "babel-plugin-transform-class-properties": "^6.24.1",    "babel-preset-env": "^1.6.1",    "babel-preset-stage-0": "^6.24.1",    "browser-sync": "^2.18.13",    "eslint": "^4.10.0",    "eslint-config-airbnb-base": "^12.1.0",    "eslint-loader": "^1.9.0",    "eslint-plugin-import": "^2.8.0",    "html-loader": "^0.5.1",    "html-webpack-plugin": "^2.30.1",    "jsdom-quokka-plugin": "^1.0.7",    "webpack": "^3.8.1",    "webpack-dev-server": "^2.9.3"  },  "scripts": {    "start": "webpack && webpack-dev-server --open",    "lint": "eslint ./**/.*.js --quiet",    "lint:fix": "eslint ./**/*.js --fix"  },  "name": "canvas",  "version": "1.0.0",  "main": "index.js",  "keywords": [],  "author": "",  "license": "ISC",  "description": "",  "quokka": {    "babel": true,    "presets": [      "env"    ],    "plugins": [      "jsdom-quokka-plugin"    ]  }}

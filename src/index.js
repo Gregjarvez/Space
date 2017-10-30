@@ -18,7 +18,7 @@ class Pong {
     this.ball = new Ball(specs.ballSpecs);
     this.paddle = new Paddle(specs.paddleSpecs);
     this.clickToStart = new Text(specs.welcome);
-    this.clickToRestart = new Text(Object.assign(specs.welcome, { text: 'Click To Restart' }));
+    this.clickToRestart = new Text(Object.assign({}, specs.welcome, { text: 'Click To Restart' }));
     this.ticker = new Ticker();
     this.started = false;
 
