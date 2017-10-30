@@ -3,6 +3,7 @@ import Paddle from './modules/paddle';
 import Ball from './modules/ball';
 import specs from './modules/specs';
 import Brick from './modules/brick';
+import BrickType1 from './modules/brick_u1';
 import { repaint, canvas } from './modules/canvas';
 import Grid from './modules/grid';
 import Event from './modules/events';
@@ -10,7 +11,7 @@ import Life from './modules/life';
 import Text from './modules/text';
 import Ticker from './modules/ticker';
 import Composer from './composer';
-import * as structures from './modules/structure';
+import levels from './modules/levels';
 
 class Pong {
   constructor() {
@@ -24,7 +25,8 @@ class Pong {
     this.ticker = new Ticker();
     this.composer = new Composer();
     this.started = false;
-    this.structures = structures;
+    this.currentLevel = 0;
+
     this.setup();
   }
 
@@ -47,9 +49,18 @@ class Pong {
     repaint();
 
     this.grid
-      .fill(Brick, specs.brick, true)
-      .plugin(this.ball)
-      .structure(this.structures.level1)
+      .fill({
+        type0: {
+          brick: Brick,
+          specs: specs.brick,
+        },
+        type1: {
+          brick: BrickType1,
+          specs: Object.assign({}, specs.brick, { color: 'purple' }),
+        },
+      }, true)
+      .plugin('ball', this.ball)
+      .plugin('levelStructure', levels[this.currentLevel])
       .construct();
 
     this.composer.group(
@@ -79,6 +90,8 @@ class Pong {
 
     this.ticker.register(this.update);
     this.paddle.onMouseMove();
+
+    this.__debuggger__();
   }
 
   update = () => {
@@ -90,8 +103,9 @@ class Pong {
     this.clickToStart.show();
     this.life.show();
 
+    this.tryloadNextLevel();
     this.reset();
-  }
+  };
 
   restart() {
     this.ticker.stop();
@@ -100,11 +114,8 @@ class Pong {
     this.start();
   }
 
-
   isGameover() {
-    const numberOfBricksLeft = this.grid.gridItemDone -
-                               (this.grid.gridItems.length - this.grid.skip);
-    return this.life.lifes.length === 0 || numberOfBricksLeft === 0;
+    return this.life.lifes.length === 0;
   }
 
   reset() {
@@ -116,7 +127,26 @@ class Pong {
       this.grid.gridItemDone = 0;
     }
   }
+
+  tryloadNextLevel() {
+    const numberOfBricksLeft = this.grid.gridItemDone -
+        (this.grid.gridItems.length - this.grid.skip);
+    if (numberOfBricksLeft === 0 && this.life.lifes.length > 0) {
+      this.restart();
+      this.currentLevel++;
+    }
+  }
+
+  __debuggger__() {
+    new Event()
+      .accept(canvas)
+      .on('mousemove', (e) => {
+        this.ball.pos.x = e.offsetX;
+        this.ball.pos.y = e.offsetY;
+      });
+  }
 }
+
 const pong = new Pong();
 pong.start();
 

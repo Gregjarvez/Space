@@ -7,7 +7,7 @@ class Ball extends Circle {
     super(spec);
     this.drag = 0.5;
     this.vel = new Vec(5, 7);
-    this.accepted = null; // currently life
+    this.accepted = null;
   }
 
   move() {

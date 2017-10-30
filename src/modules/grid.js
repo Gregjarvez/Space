@@ -5,34 +5,26 @@ class Grid {
     this.dimension = new Vec(col, row);
     this.gridItems = [];
     this.gridItemDone = 0;
-    this.gridStructure = [];
     this.padding = 2;
 
-    this.accepted = null;
-    this.Entity = null;
+    this.entities = null;
     this.specs = null;
     this.skip = this.dimension.y * 2;
     this.shiftFromTop = false;
   }
 
-  plugin(entity) {
-    if (!this.accepted) {
-      this.accepted = entity;
+  plugin(key, entity) {
+    if (!this[key]) {
+      this[key] = entity;
       return this;
     }
     return this;
   }
 
-  structure(structure) {
-    this.gridStructure = structure;
-    return this;
-  }
-
-  fill(entity, specs, shift) {
-    this.Entity = entity;
-    this.specs = specs;
-    this.shiftFromTop = shift;
-
+  fill(entities, space) {
+    this.entities = entities;
+    this.shiftFromTop = space;
+    this.specs = entities.type0.specs; // todo remove hard coded values
     return this;
   }
 
@@ -46,15 +38,18 @@ class Grid {
 
     for (let row = 0; row < rowLength; row++) {
       for (let col = 0; col < colLength; col++) {
-        const brick = new this.Entity(Object.assign(this.specs, {
-          x: this.specs.width * col,
-          y: this.specs.height * row,
+        const index = col + (this.dimension.y * row);
+        const { brick: Brick, specs } = this.entities[`type${this.levelStructure[index]}`];
+        const { width, height } = specs;
+
+        const construct = new Brick(Object.assign(specs, {
+          x: width * col,
+          y: height * row,
         }));
 
-        brick.size.x -= this.padding;
-        brick.size.y -= this.padding;
-
-        this.gridItems.push(brick);
+        construct.size.x -= this.padding;
+        construct.size.y -= this.padding;
+        this.gridItems.push(construct);
       }
     }
 
@@ -69,8 +64,8 @@ class Grid {
 
   checkIntersection = () => {
     const { width, height } = this.specs;
-    const col = Math.floor(this.accepted.pos.x / width);
-    const row = Math.floor(this.accepted.pos.y / height);
+    const col = Math.floor(this.ball.pos.x / width);
+    const row = Math.floor(this.ball.pos.y / height);
     const index = col + (this.dimension.y * row);
 
     const brickAtGrid = this.gridItems[index];
@@ -82,21 +77,25 @@ class Grid {
     );
 
     if (isWithinRange() && brickAtGrid.visible !== false) {
-      brickAtGrid.visible = false;
+      if (brickAtGrid.hitPoints && brickAtGrid.hitPoints > 1) {
+        brickAtGrid.hitPoints--;
+      } else {
+        brickAtGrid.visible = false;
+      }
 
-      const ballX = Math.floor(this.accepted.pos.x);
+      const ballX = Math.floor(this.ball.pos.x);
       const brickLeftReference = brickAtGrid.left + 5;
       const brickRightReference = brickAtGrid.right - 5;
 
       if (brickLeftReference >= ballX) {
-        this.accepted.vel.x *= -1;
+        this.ball.vel.x *= -1;
       }
       if (brickRightReference <= ballX) {
-        this.accepted.vel.x *= -1;
+        this.ball.vel.x *= -1;
       }
 
-      this.accepted.vel.y *= -1;
-      this.accepted.vel.y += 0.05;
+      this.ball.vel.y *= -1;
+      this.ball.vel.y += 0.05;
       this.gridItemDone++;
     }
   }
