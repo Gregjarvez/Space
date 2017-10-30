@@ -34,6 +34,7 @@ class Life {
   increase() {
     ++this.lifeCount;
   }
+
   show = () => {
     this.lifes.forEach((life) => {
       life.draw();
@@ -41,7 +42,7 @@ class Life {
   }
 
 
-  resetLife() {
+  resetLife = () => {
     this.populate();
   }
 }

@@ -5,6 +5,7 @@ class Grid {
     this.dimension = new Vec(col, row);
     this.gridItems = [];
     this.gridItemDone = 0;
+    this.gridStructure = [];
     this.padding = 2;
 
     this.accepted = null;
@@ -22,6 +23,11 @@ class Grid {
     return this;
   }
 
+  structure(structure) {
+    this.gridStructure = structure;
+    return this;
+  }
+
   fill(entity, specs, shift) {
     this.Entity = entity;
     this.specs = specs;
@@ -30,7 +36,7 @@ class Grid {
     return this;
   }
 
-  draw() {
+  draw = () => {
     this.gridItems.forEach(item => item.visible && item.draw());
   }
 
@@ -61,7 +67,7 @@ class Grid {
     }
   }
 
-  checkIntersection() {
+  checkIntersection = () => {
     const { width, height } = this.specs;
     const col = Math.floor(this.accepted.pos.x / width);
     const row = Math.floor(this.accepted.pos.y / height);
@@ -95,7 +101,7 @@ class Grid {
     }
   }
 
-  reset() {
+  reset = () => {
     this.gridItems.forEach((brick, index) => {
       if (index >= this.skip) {
         brick.visible = true;

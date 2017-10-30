@@ -9,6 +9,8 @@ import Event from './modules/events';
 import Life from './modules/life';
 import Text from './modules/text';
 import Ticker from './modules/ticker';
+import Composer from './composer';
+import * as structures from './modules/structure';
 
 class Pong {
   constructor() {
@@ -20,8 +22,9 @@ class Pong {
     this.clickToStart = new Text(specs.welcome);
     this.clickToRestart = new Text(Object.assign({}, specs.welcome, { text: 'Click To Restart' }));
     this.ticker = new Ticker();
+    this.composer = new Composer();
     this.started = false;
-
+    this.structures = structures;
     this.setup();
   }
 
@@ -40,22 +43,35 @@ class Pong {
     }
   }
 
-  restart() {
-    this.ticker.stop();
-
-    this.event.clear();
-    this.started = false;
-
-    this.start();
-  }
-
   setup() {
     repaint();
 
     this.grid
       .fill(Brick, specs.brick, true)
       .plugin(this.ball)
+      .structure(this.structures.level1)
       .construct();
+
+    this.composer.group(
+      'resets',
+      this.ball.reset,
+      this.grid.reset,
+      this.paddle.reset,
+      this.life.resetLife,
+    );
+
+    this.composer.group(
+      'draw',
+      this.paddle.draw,
+      this.ball.draw,
+      this.grid.draw,
+    );
+
+    this.composer.group(
+      'collision',
+      this.grid.checkIntersection,
+      this.paddle.checkCollision,
+    );
 
     this.clickToStart.show();
     this.ball.plugin(this.life);
@@ -67,20 +83,23 @@ class Pong {
 
   update = () => {
     repaint();
-
-    this.paddle.draw();
-    this.ball.draw();
-    this.grid.draw();
-
+    this.composer.runAll('draw');
+    this.composer.runAll('collision');
     this.ball.move();
-    this.grid.checkIntersection();
-    this.paddle.checkCollision();
 
     this.clickToStart.show();
     this.life.show();
 
     this.reset();
   }
+
+  restart() {
+    this.ticker.stop();
+    this.event.clear();
+    this.started = false;
+    this.start();
+  }
+
 
   isGameover() {
     const numberOfBricksLeft = this.grid.gridItemDone -
@@ -91,12 +110,8 @@ class Pong {
   reset() {
     if (this.isGameover()) {
       this.clickToRestart.show();
+      this.composer.runAll('resets');
       this.restart();
-
-      this.ball.reset();
-      this.grid.reset();
-      this.paddle.reset();
-      this.life.resetLife();
 
       this.grid.gridItemDone = 0;
     }

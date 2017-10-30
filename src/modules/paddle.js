@@ -20,7 +20,7 @@ class Paddle extends Rect {
     return this;
   }
 
-  draw() {
+  draw = () => {
     this.drawRect(ctx, this);
   }
 
@@ -34,7 +34,7 @@ class Paddle extends Rect {
       .on('mousemove', this.move);
   }
 
-  checkCollision() {
+  checkCollision = () => {
     if (this.accepted.left > this.left &&
         this.accepted.right < this.right &&
         this.accepted.bottom > this.top
@@ -49,7 +49,7 @@ class Paddle extends Rect {
       this.accepted.vel.y -= 0.5;
     }
   }
-  reset() {
+  reset = () => {
     this.pos.x = canvas.halfWidth;
   }
 }

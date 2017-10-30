@@ -36,14 +36,14 @@ class Ball extends Circle {
     return this;
   }
 
-  reset() {
+  reset = () => {
     this.pos.x = gamesCanvas.halfWidth;
     this.pos.y = gamesCanvas.halfHeight;
     this.vel.x = 5;
     this.vel.y = 7;
   }
 
-  draw() {
+  draw = () => {
     this.drawCircle(this);
   }
 }

@@ -2,7 +2,6 @@
 import Circle from './circles';
 
 class Dot extends Circle {
-// eslint-disable-next-line no-useless-constructor
   constructor(specs) {
     super(specs);
     this.blinkCount = 3;
@@ -26,15 +25,15 @@ class Dot extends Circle {
           clearInterval(count);
           return resolve(this.animationComplete);
         }
-      }, 300);
+      }, 200);
     }));
   }
 
 
-  animate(callBack) {
+  animate(cb) {
     this.blink()
       .then((done) => {
-        callBack(done);
+        cb(done);
       });
   }
 }
