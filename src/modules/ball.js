@@ -24,7 +24,7 @@ class Ball extends Circle {
 
     if (this.top > canvas.height) {
       this.reset();
-      if (this.accepted.lifes.length) {
+      if (this.accepted.lives.length) {
         this.accepted.decrease();
       }
     }

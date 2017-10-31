@@ -44,7 +44,13 @@ class Paddle extends Rect {
 
   checkCollision = () => {
     // rename for semantics in this scope
-    this.accepted = this.ball;
+    this.ball = this.accepted;
+    /**
+     * switch this for pythagoras theorem check
+     * c = sqrt(diff(ballX - paddleX)^2 - diff(bally - paddleY)^2)
+     * c === 0;
+     * collided
+     */
     if (this.ball.left > this.left &&
         this.ball.right < this.right &&
         this.ball.bottom > this.top

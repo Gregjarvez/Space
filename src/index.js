@@ -210,7 +210,7 @@ class Pong {
   }
 
   isGameover() {
-    return this.life.lifes.length === 0;
+    return this.life.lives.length === 0;
   }
 
   reset() {
@@ -233,7 +233,7 @@ class Pong {
     if (
       this.grid.gridItemDone -
       (this.grid.gridItems.length - this.grid.skip) === 0 &&
-      this.life.lifes.length > 0
+      this.life.lives.length > 0
     ) {
       if (this.currentLevel < levels.length - 1) {
         this.nextLevel();
