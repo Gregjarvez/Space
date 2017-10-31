@@ -1,9 +1,10 @@
 /**
  *
- * @type []: numbers}
+ * @description levels
+ * @type []: <numbers >
  * @key 0 normal brick
  * @key 1 brick hitpoints 2
- * @key 2 brick with hidden powerups
+ * @key 2 brick with hidden powerups // todo maybe
  */
 const level1 = [
   0, 0, 0, 0, 0, 0, 0, 0,
@@ -33,12 +34,15 @@ const level2 = [
 
 const level3 = [
   0, 0, 0, 0, 0, 0, 0, 0,
-  0, 0, 1, 1, 1, 1, 0, 0,
-  0, 0, 1, 2, 2, 1, 1, 1,
-  0, 0, 1, 1, 1, 1, 0, 0,
-  0, 0, 0, 0, 0, 0, 2, 0,
   0, 0, 0, 0, 0, 0, 0, 0,
-  1, 1, 0, 0, 0, 0, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  1, 0, 0, 0, 0, 0, 0, 1,
+  1, 1, 1, 1, 1, 1, 1, 1,
+  1, 1, 1, 1, 1, 1, 1, 0,
+  1, 1, 0, 0, 0, 1, 1, 1,
+  1, 1, 1, 0, 1, 1, 1, 1,
 ];
 
 export default [level1, level2, level3];

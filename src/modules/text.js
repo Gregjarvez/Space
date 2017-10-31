@@ -13,7 +13,7 @@ class Text {
     this.fontSize = 20;
   }
 
-  show() {
+  show = () => {
     if (this.visible) {
       ctx.fillStyle = this.color;
       ctx.font = this.font;

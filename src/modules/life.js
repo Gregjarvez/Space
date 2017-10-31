@@ -31,10 +31,6 @@ class Life {
     }
   }
 
-  increase() {
-    ++this.lifeCount;
-  }
-
   show = () => {
     this.lifes.forEach((life) => {
       life.draw();

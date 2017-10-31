@@ -2,6 +2,9 @@ import Rect from './rect';
 import Event from './events';
 import gameCanvas, { canvas, ctx } from './canvas';
 
+/**
+ * @class Paddle
+ */
 class Paddle extends Rect {
   constructor(spec) {
     super(spec);
@@ -12,6 +15,11 @@ class Paddle extends Rect {
     this.event = new Event();
   }
 
+  /**
+   * @description only accept one plugin. ball
+   * @param entity
+   * @returns {Paddle}
+   */
   plugin(entity) {
     if (!this.accepted) {
       this.accepted = entity;
@@ -35,18 +43,20 @@ class Paddle extends Rect {
   }
 
   checkCollision = () => {
-    if (this.accepted.left > this.left &&
-        this.accepted.right < this.right &&
-        this.accepted.bottom > this.top
+    // rename for semantics in this scope
+    this.accepted = this.ball;
+    if (this.ball.left > this.left &&
+        this.ball.right < this.right &&
+        this.ball.bottom > this.top
     ) {
-      this.accepted.vel.y = -this.accepted.vel.y;
+      this.ball.vel.y = -this.ball.vel.y;
 
       const paddleCenter = this.pos.x + (this.size.x / 2);
-      const collisionPointFromCenter = this.accepted.pos.x - paddleCenter;
+      const collisionPointFromCenter = this.ball.pos.x - paddleCenter;
 
-      this.accepted.vel.x = collisionPointFromCenter * this.accepted.drag;
-      this.accepted.vel.x -= 0.5;
-      this.accepted.vel.y -= 0.5;
+      this.ball.vel.x = collisionPointFromCenter * this.ball.drag;
+      this.ball.vel.x -= 0.5;
+      this.ball.vel.y -= 0.5;
     }
   }
   reset = () => {

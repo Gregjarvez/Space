@@ -13,30 +13,94 @@ import Ticker from './modules/ticker';
 import Composer from './composer';
 import levels from './modules/levels';
 
+/**
+ * @class
+ * @constructor
+ * @type {Pong}
+ * @description Main game controller;
+ *
+ */
 class Pong {
   constructor() {
+    /**
+     *
+     * @type {Life}
+     */
     this.life = new Life();
+    /**
+     *
+     * @type {Event}
+     */
     this.event = new Event();
+    /**
+     *
+     * @type {Grid}
+     * @param {...number} x & y -vector from Vector class
+     */
     this.grid = new Grid(10, 8);
+    /**
+     *
+     * @type {Ball}
+     * @param {Object.<string, number|string>}
+     *
+     */
     this.ball = new Ball(specs.ballSpecs);
+    /**
+     *
+     * @type {Paddle}
+     * @param {Object.<string, number|string>}
+     */
     this.paddle = new Paddle(specs.paddleSpecs);
-    this.clickToStart = new Text(specs.welcome);
+    /**
+     *
+     * @type {Text}
+     * @param {Object.<string, number|string>}
+     */
+    this.clickToStartText = new Text(specs.welcome);
     this.clickToRestart = new Text(Object.assign({}, specs.welcome, { text: 'Click To Restart' }));
+
+    /**
+     *
+     * @type {Ticker}
+     * @param null
+     */
     this.ticker = new Ticker();
+    /**
+     *
+     * @type {Composer}
+     * @param null
+     */
     this.composer = new Composer();
+
+    /**
+     *
+     * @type {boolean}
+     */
     this.started = false;
+    /**
+     *
+     * @type {number}
+     */
     this.currentLevel = 0;
 
     this.setup();
   }
 
+  /**
+   * @desc
+   * Starts main game. Accepts and Binds an event to canvas
+   * @callback no run if this.started = true
+   * @see Event#accept
+   * @see Event#on
+   *
+   */
   start() {
     if (!this.started) {
       this.event
         .accept(canvas)
         .on('click', () => {
           if (!this.started) {
-            this.clickToStart.remove();
+            this.clickToStartText.remove();
 
             this.ticker.tick();
             this.started = true;
@@ -45,7 +109,19 @@ class Pong {
     }
   }
 
+  /**
+   * @desc
+   * setUp main game components
+   * @see repaint#Gamecanvas
+   * @see grid#Grid
+   * @see fill#Grid
+   * @see plugin#Grid
+   * @see construct#Grid
+   *
+   * @see group@Composer
+   */
   setup() {
+    // paint done once until update is called;
     repaint();
 
     this.grid
@@ -84,13 +160,29 @@ class Pong {
       this.paddle.checkCollision,
     );
 
-    this.clickToStart.show();
-    this.ball.plugin(this.life);
-    this.paddle.plugin(this.ball);
+    this.composer.group(
+      'show',
+      this.clickToStartText.show,
+      this.life.show,
+    );
 
-    this.ticker.register(this.update);
+    this.clickToStartText.show();
     this.paddle.onMouseMove();
 
+    /**
+     * @desc
+     * plugin allows two objects to interact
+     */
+    this.ball.plugin(this.life);
+    this.paddle.plugin(this.ball);
+    /**
+     * @desc
+     * registers what function to call during setInterval update
+     * needs to use requestAnimationFrame
+     */
+    this.ticker.register(this.update);
+
+    // uncomment debugger to move ball where mouse goes
     this.__debuggger__();
   }
 
@@ -98,19 +190,22 @@ class Pong {
     repaint();
     this.composer.runAll('draw');
     this.composer.runAll('collision');
+    this.composer.runAll('show');
     this.ball.move();
 
-    this.clickToStart.show();
-    this.life.show();
-
     this.tryloadNextLevel();
-    this.reset();
+    if (this.isGameover()) this.reset();
   };
 
   restart() {
+    /**
+     * @desc
+     * stops ticker
+     * unbind and rebinds the event to allow click to restart
+     */
+    this.started = false;
     this.ticker.stop();
     this.event.clear();
-    this.started = false;
     this.start();
   }
 
@@ -119,21 +214,32 @@ class Pong {
   }
 
   reset() {
-    if (this.isGameover()) {
-      this.clickToRestart.show();
-      this.composer.runAll('resets');
-      this.restart();
+    this.clickToRestart.show();
+    this.grid.gridItemDone = 0;
+    this.currentLevel = 0;
 
-      this.grid.gridItemDone = 0;
-    }
+    this.composer.runAll('resets');
+    this.restart();
+  }
+
+  nextLevel() {
+    this.currentLevel++;
+    this.grid.plugin('levelStructure', levels[this.currentLevel]);
+    this.composer.runAll('resets');
+    this.restart();
   }
 
   tryloadNextLevel() {
-    const numberOfBricksLeft = this.grid.gridItemDone -
-        (this.grid.gridItems.length - this.grid.skip);
-    if (numberOfBricksLeft === 0 && this.life.lifes.length > 0) {
-      this.restart();
-      this.currentLevel++;
+    if (
+      this.grid.gridItemDone -
+      (this.grid.gridItems.length - this.grid.skip) === 0 &&
+      this.life.lifes.length > 0
+    ) {
+      if (this.currentLevel < levels.length - 1) {
+        this.nextLevel();
+      } else {
+        this.reset();
+      }
     }
   }
 
