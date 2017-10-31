@@ -1,5 +1,11 @@
 import Rect from './rect';
 
+/**
+ * @class Canvas
+ * @extends Rect;
+ * @param {canvas} HTMLElement
+ * @param {object} specs
+ */
 class Canvas extends Rect {
   constructor(canvas, specs) {
     super(specs);
@@ -32,5 +38,8 @@ const gameCanvas = new Canvas(c, specs);
 
 const { _canvas: canvas, _context: ctx, repaint } = gameCanvas;
 
+// exports them individually before
+// most classes needed on ctx and a few canvas
 export { canvas, ctx, repaint };
+
 export default gameCanvas;

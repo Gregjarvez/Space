@@ -1,6 +1,19 @@
 import Vec from './vector';
 
+/**
+ * @class Rect
+ */
 class Rect {
+  /**
+   *
+   * @param {...number, ?string}
+   * @param x
+   * @param y
+   * @param radius
+   * @param startAngle
+   * @param endAngle
+   * @param {string} color
+   */
   constructor({
     x, y, width, height, color,
   }) {

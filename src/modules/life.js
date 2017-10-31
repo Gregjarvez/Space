@@ -39,8 +39,14 @@ class Life {
        * respectively.
        * one pops the other receives.
        * @example
-       * if(status) this.expired.push(this.lives.pop());
-       * on reset this.lives = [...this.expired];
+       * if(status){
+       *  var removed  = this.lives.pop();
+       *  removed.animationComplete = false;
+       *  this.expired.push(removed)
+       * }
+       * on reset this.lives = [...this.expired]
+       * this.expired = [];
+       * eliminated the need for looping on reset;
        */
       life.animate((status) => {
         if (status) this.lives.pop();

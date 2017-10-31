@@ -58,6 +58,7 @@ class Pong {
      */
     this.clickToStartText = new Text(specs.welcome);
     this.clickToRestart = new Text(Object.assign({}, specs.welcome, { text: 'Click To Restart' }));
+    this.clickForNextLevel = new Text(Object.assign({}, specs.welcome, { text: 'Click to Load Next Level' }));
 
     /**
      *
@@ -218,6 +219,7 @@ class Pong {
     this.grid.gridItemDone = 0;
     this.currentLevel = 0;
 
+    this.grid.plugin('levelStructure', levels[0]);
     this.composer.runAll('resets');
     this.restart();
   }
@@ -236,6 +238,7 @@ class Pong {
       this.life.lives.length > 0
     ) {
       if (this.currentLevel < levels.length - 1) {
+        this.clickForNextLevel.show();
         this.nextLevel();
       } else {
         this.reset();

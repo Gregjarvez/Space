@@ -1,7 +1,20 @@
 import Vec from './vector';
 import { ctx } from './canvas';
 
+/**
+ * @class Circle
+ */
 class Circle {
+  /**
+   *
+   * @param {...number, ?string}
+   * @param x
+   * @param y
+   * @param radius
+   * @param startAngle
+   * @param endAngle
+   * @param color
+   */
   constructor({
     x, y, radius, startAngle, endAngle, color,
   }) {

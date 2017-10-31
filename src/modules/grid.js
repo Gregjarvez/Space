@@ -88,7 +88,7 @@ class Grid {
   /**
    * @description
    * instead of every grid item checking if its collided with a ball
-   * I check the position of the call within the grid and remove
+   * I check the position of the ball within the grid and remove
    * the brick there;
    */
   checkIntersection = () => {

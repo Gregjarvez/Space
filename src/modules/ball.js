@@ -2,6 +2,11 @@ import Vec from './vector';
 import Circle from './circles';
 import gamesCanvas, { canvas } from './canvas';
 
+/**
+ * @class Ball
+ * @extends Circle
+ * @param {Object, <string, number|string>} specs
+ */
 class Ball extends Circle {
   constructor(spec) {
     super(spec);
@@ -24,8 +29,14 @@ class Ball extends Circle {
 
     if (this.top > canvas.height) {
       this.reset();
-      if (this.accepted.lives.length) {
-        this.accepted.decrease();
+      // rename for semantic reasons
+      this.lives = this.accepted;
+      if (this.lives.length) {
+        /**
+         * @description decreases life after paddle misses ball
+         * @see decrease#Life
+         */
+        this.lives.decrease();
       }
     }
   }

@@ -1,3 +1,6 @@
+/**
+ * @class Ticker
+ */
 class Ticker {
   constructor() {
     this.func = null;
@@ -5,13 +8,20 @@ class Ticker {
     this.fps = 1000 / 60;
   }
 
+  /**
+   *
+   * @param fnc - callback function in setInterval;
+   */
   register(fnc) {
     this.func = fnc;
   }
+
+  /**
+   * use requestAnimationFrame instead.
+   */
   tick = () => {
     this.loop = setInterval(() => {
       this.func();
-      console.log('ticking');
     }, this.fps);
   }
 
